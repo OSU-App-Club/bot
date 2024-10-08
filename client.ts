@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/rest";
+import { serve } from "bun";
 import { Client, GatewayIntentBits, Partials } from "discord.js";
 import interactionCreateHandler from "./events/interactions";
 import messageCreateHandler from "./events/messages";
@@ -50,10 +51,6 @@ client.on("messageCreate", async (message) => {
   await messageCreateHandler(message, client, octokit);
 });
 
-client.on("error", (error) => {
-  logger.error(`Client error: ${error}`);
-});
-
 // Graceful shutdown
 process.on("SIGINT", () => {
   logger.info("Shutting down gracefully...");
@@ -67,5 +64,17 @@ process.on("SIGTERM", () => {
   process.exit();
 });
 
-// Log in to Discord with your client's token
 client.login(process.env.BOT_TOKEN);
+
+serve({
+  fetch: (req) => {
+    const url = new URL(req.url);
+    if (url.pathname === "/api/healthz") {
+      return new Response("OK", { status: 200 });
+    }
+    return new Response("Not Found", { status: 404 });
+  },
+  port: process.env.PORT || 3001,
+});
+
+console.log(`Server running on port ${process.env.PORT || 3001}`);
