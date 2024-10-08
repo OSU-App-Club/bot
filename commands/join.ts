@@ -45,7 +45,7 @@ export async function handleJoinGithubCommand(
   } catch (error) {
     if (error instanceof Error) {
       await interaction.reply({
-        content: `An error occurred while sending the invitation: ${error.message}`,
+        content: `You are already a member of the organization, or, an error occurred: ${error.message}`,
         ephemeral: true,
       });
     } else {
