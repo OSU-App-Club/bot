@@ -1,12 +1,13 @@
 import { REST, Routes } from "discord.js";
-import { commands } from "./commands/help";
-import logger from "./logger";
+import { commands } from "../commands/main";
+import logger from "../logger";
 
 const clientId = process.env.CLIENT_ID!;
 const rest = new REST({ version: "10" }).setToken(process.env.BOT_TOKEN!);
 const guildIds = {
   test: process.env.GUILD_ID_TEST!,
-  production: process.env.GUILD_ID_PROD!,
+  production:
+    process.env.NODE_ENV === "development" ? null! : process.env.GUILD_ID_PROD!,
 };
 
 (async () => {
