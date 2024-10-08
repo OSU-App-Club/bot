@@ -3,12 +3,14 @@
   "module": "client.ts",
   "type": "module",
   "scripts": {
-    "deploy-commands": "bun run deploy-commands.ts",
-    "start": "bun run client.ts"
+    "prepare": "husky install",
+    "deploy": "bun run scripts/deploy-commands.ts",
+    "start": "bun run client.ts",
+    "commit-help": "bun scripts/main.ts emoji-list"
   },
   "devDependencies": {
     "bun-types": "latest",
-    "husky": "^9.1.6"
+    "husky": "^8.0.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
