@@ -26,11 +26,6 @@ export default async function messageCreateHandler(
 
   const args = message.content.trim().split(/\s+/);
 
-  if (args[0].toLowerCase() === "!join") {
-    await reactToMessage(message, emojis.error);
-    return;
-  }
-
   if (
     args[0].toLowerCase() === "!join" &&
     args[1]?.toLowerCase() === "github"
@@ -48,11 +43,12 @@ export default async function messageCreateHandler(
       await reactToMessage(message, emojis.confirm);
       await sendDirectMessage(
         user ?? message.author,
-        `I have sent you an invitation to the App Development Club GitHub organization. You can accept it at the following link: <hhttps://github.com/OSU-App-Club>`
+        `I have sent you an invitation to the App Development Club GitHub organization. You can accept it at the following link: <https://github.com/OSU-App-Club>`
       );
     } catch (error) {
-        await reactToMessage(message, emojis.error);
-        return
+      console.error(error);
+      await reactToMessage(message, emojis.error);
+      return;
     }
   }
 }
