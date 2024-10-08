@@ -31,10 +31,7 @@ export async function sendGithubInvite(
 
     console.log(`Invite sent to ${githubUsername}`);
   } catch (error) {
-    throw new Error(
-      `Failed to invite ${githubUsername} to the organization: ${JSON.stringify(
-        error
-      )}`
-    );
+    console.error(`Failed to send invite to ${githubUsername}: ${error}`);
+    throw error;
   }
 }

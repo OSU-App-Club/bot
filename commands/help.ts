@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, CommandInteraction } from "discord.js";
+import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 
 /**
  * Defines the /help slash command.
@@ -12,13 +12,13 @@ export const helpCommand = new SlashCommandBuilder()
  * @param interaction The command interaction.
  */
 export async function handleHelpCommand(interaction: CommandInteraction) {
-  await interaction.reply(
-    "To join the GitHub organization, use the `/join github {username}` command."
-  );
+  await interaction.reply({
+    content: helpMessage,
+    ephemeral: true,
+  });
 }
 
-/**
- * Collection of all commands.
- * Want a new command? Add it here.
- */
-export const commands = [helpCommand];
+const helpMessage = `**Commands:**
+- \`/help\`: See this help message.
+- \`/join github {username}\`: Join the App Development Club GitHub organization.
+`;

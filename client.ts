@@ -1,10 +1,9 @@
-import { Client, GatewayIntentBits, Partials } from "discord.js";
 import { Octokit } from "@octokit/rest";
+import { Client, GatewayIntentBits, Partials } from "discord.js";
+import interactionCreateHandler from "./events/interactions";
 import messageCreateHandler from "./events/messages";
-import interactionCreateHandler from "./events/interactions"
 import logger from "./logger";
 
-// Validate required environment variables
 const requiredEnvVars = [
   "BOT_TOKEN",
   "GITHUB_TOKEN",
@@ -20,12 +19,10 @@ for (const varName of requiredEnvVars) {
   }
 }
 
-// Initialize Octokit for GitHub interactions
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
-// Create a new Discord client instance
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -33,7 +30,7 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.DirectMessages,
   ],
-  partials: [Partials.Channel], // Needed to receive DMs
+  partials: [Partials.Channel],
 });
 
 // Event: Ready
@@ -42,15 +39,19 @@ client.once("ready", () => {
     logger.error("Client user is not available.");
     return;
   }
-  logger.info(`Logged in as ${client.user.tag}`);
+  logger.info(`${client.user.tag} is ready to serve!`);
 });
 
 // Handle interactions (slash commands)
-interactionCreateHandler(client);
+interactionCreateHandler(client, octokit);
 
 // Handle message-based commands
 client.on("messageCreate", async (message) => {
   await messageCreateHandler(message, client, octokit);
+});
+
+client.on("error", (error) => {
+  logger.error(`Client error: ${error}`);
 });
 
 // Graceful shutdown

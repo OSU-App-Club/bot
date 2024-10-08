@@ -1,12 +1,12 @@
-import { Message, Client } from "discord.js";
 import { Octokit } from "@octokit/rest";
+import { Client, Message } from "discord.js";
+import { emojis } from "../constants";
 import {
   getUserById,
-  sendDirectMessage,
   reactToMessage,
+  sendDirectMessage,
 } from "../utils/discord";
 import { sendGithubInvite } from "../utils/github";
-import { emojis } from "../constants";
 
 /**
  * Handles the 'messageCreate' event.
@@ -21,38 +21,38 @@ export default async function messageCreateHandler(
 ) {
   // Ignore messages from bots
   if (message.author.bot) return;
+  // Ignore messages that don't start with the prefix
+  if (!message.content.startsWith("!")) return;
 
   const args = message.content.trim().split(/\s+/);
+
+  if (args[0].toLowerCase() === "!join") {
+    await reactToMessage(message, emojis.error);
+    return;
+  }
+
   if (
     args[0].toLowerCase() === "!join" &&
     args[1]?.toLowerCase() === "github"
   ) {
     const githubUsername = args[2];
     if (!githubUsername) {
-      await message.reply(
-        "Please provide a GitHub username. Usage: `!join github {username_here}`"
-      );
+      await reactToMessage(message, emojis.error);
       return;
     }
     try {
       const user = await getUserById(client, message.author.id);
-      if (user) {
-        await sendGithubInvite(githubUsername, octokit);
-        await reactToMessage(message, emojis.success);
-        await reactToMessage(message, emojis.confirm);
-        await sendDirectMessage(
-          user,
-          `## 🎉 You have been invited to the App Development Club GitHub organization. 🎉
-         *Please accept the invitation at the following link:* <https://github.com/OSU-App-Club>`
-        );
-      } else {
-        await message.reply(
-          "I couldn't find your user. Please enable direct messages from server members and try again."
-        );
-      }
+
+      await sendGithubInvite(githubUsername, octokit);
+      await reactToMessage(message, emojis.success);
+      await reactToMessage(message, emojis.confirm);
+      await sendDirectMessage(
+        user ?? message.author,
+        `I have sent you an invitation to the App Development Club GitHub organization. You can accept it at the following link: <hhttps://github.com/OSU-App-Club>`
+      );
     } catch (error) {
-      console.error(error);
-      await reactToMessage(message, emojis.error);
+        await reactToMessage(message, emojis.error);
+        return
     }
   }
 }

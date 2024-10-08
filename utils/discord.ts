@@ -1,4 +1,4 @@
-import { Client, User, Message } from "discord.js";
+import { Client, Message, User } from "discord.js";
 
 /**
  * Fetches a Discord user by their ID.
@@ -23,10 +23,14 @@ export async function getUserById(
  * @param content The content of the message.
  */
 export async function sendDirectMessage(
-  user: User,
+  user: User | string,
   content: string
 ): Promise<void> {
-  await user.send(content);
+  if (user instanceof User) {
+    await user.send(content);
+  } else {
+    throw new Error("User not found");
+  }
 }
 
 /**
