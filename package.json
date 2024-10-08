@@ -1,0 +1,22 @@
+{
+  "name": "osu-app-club-github-bot",
+  "module": "client.ts",
+  "type": "module",
+  "scripts": {
+    "deploy-commands": "bun run deploy-commands.ts",
+    "start": "bun run client.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "husky": "^9.1.6"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@octokit/rest": "^21.0.2",
+    "discord.js": "^14.16.3",
+    "octokit": "^4.0.2",
+    "winston": "^3.15.0"
+  }
+}
