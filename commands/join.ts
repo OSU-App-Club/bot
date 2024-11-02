@@ -36,12 +36,11 @@ export async function handleJoinGithubCommand(
   }
 
   try {
-    await sendGithubInvite(username, octokit);
     await interaction.reply({
       content: `Invitation sent to \`${username}\`. \n You can accept our invitation at the following link: <https://github.com/OSU-App-Club> **OR** by checking the email associated with your GitHub account.`,
       ephemeral: true,
     });
-    return;
+    await sendGithubInvite(username, octokit);
   } catch (error) {
     if (error instanceof Error) {
       await interaction.reply({

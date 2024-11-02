@@ -23,6 +23,8 @@ export default async function messageCreateHandler(
   if (message.author.bot) return;
   // Ignore messages that don't start with the prefix
   if (!message.content.startsWith("!")) return;
+  // Ignore slash commands
+  if (message.content.startsWith("/")) return;
 
   const args = message.content.trim().split(/\s+/);
 
